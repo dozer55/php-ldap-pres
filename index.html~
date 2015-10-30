@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Open Says Me</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/moon.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<img class="noborder" src="images/hobbit-door.png">
+					<h1><span class="shadow">Open Says Me!</span></h1>
+					<h3><span class="shadow">Drupal 7 Authentication with LDAP</span></h3>
+					<p>
+						<small>Presented by Bill Crum / <span class='texthighlight'>Chattanooga State Community College</span> / wacrum@gmail.com</small>
+					<h4><span class='texthighlight'>Drupal Camp Chattanooga 2015</span></h4>
+					</p>
+				</section>
+
+				<section>
+					<section>
+						<h2><span class="shadow">LDAP Defined</span></h2>
+						<p>
+						The Lightweight Directory Access Protocol (LDAP) is an open, vendor-neutral, industry standard application protocol for accessing and maintaining distributed directory information services over an Internet Protocol (IP) network.
+						</p>
+						<p class='texthighlight'>Source: <a href='https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol'>Wikipedia</a></p>
+					</section>
+					<section>
+						<h2><span class="shadow">LDAP Defined</span></h2>
+						<p>
+						<p><img src="images/you-shall-not-pass.gif"></p>
+						A common usage of LDAP is to provide a single sign on where one password for a user is shared between many services, such as applying a company login code to web pages (so that staff log in only once to company computers, and then are automatically logged into the company intranet).
+						</p>
+						<p class='texthighlight'>Source: <a href='https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol'>Wikipedia</a></p>
+					</section>
+				
+					<section>
+						<h2>LDAP at Chattanooga State</h2>
+						<img class="noborder" src="images/logo-active-directory-720.png">
+						<p></p>
+						<li>Faculty/Staff PC Logins</li>
+						<li>Student PC Logins</li>
+						<li>Learning Management System Logins</li>
+						<li>Student Portal Logins</li>
+						<li>Many more !!!</li>
+						<p></p>
+						<h3><span class="texthighlight">SINGLE SIGN ON IS KEY</span></h3>
+					</section>
+					
+					<section>
+						<h2>Benefits of Using LDAP Auth For Web Applications</h2>
+						<li>Single Sign On</li>
+						<li>Easy Administration of Users, Roles, etc. </li>
+						<p>(We'll talk about Roles later on)</p>
+						<li>Active Directory is Maintained by Someone Else!!! <img class="noborder" src="images/devil-icon.png"></li>
+					</section>
+				</section>
+				
+				<section>
+					<section>
+						<h2>User Authentication: The Old Way</h2>
+						<img src="images/moldy-bread.png">
+						<li>Create database of users, write multiple scripts to manage everything....Bleh!</li>
+					</section>
+					
+					<section>
+						<h2>User Authentication: The Newer, Easier Way</h2>
+						<pre><code class="hljs" data-trim contenteditable>
+if(isset($_SESSION['username'])){
+	$ldap = ldap_connect("dcdmz.cstcc.lan,ou=users,ou=staff,dc=cstcc,dc=lan");
+	$sub = "cstcc\\";
+
+	if($bind = @ldap_bind($ldap, $sub.$_SESSION['username'], $_SESSION['password']) && $_SESSION['password']<>'') {
+		$_SESSION['type'] = getSessionInfo($_SESSION['username']);
+	
+		header("Location: access_request.php");
+	}
+}
+						</code></pre>	
+						<li>Bind to LDAP, check if user exists, and log into system</li>
+						<li>Users are managed by LDAP/Active Directory Administrator</li>
+					</section>
+					
+					<section>
+						<h2>User Authentication: The Drupal Way</h2>
+						<img class="noborder" src="images/bread.png"><img class="noborder" src="images/drupal.png">
+						<p>It's Baked In! Well...sort of...Er...<span class="texthighlight">Ready to Bake!</span></p>
+					</section>
+				</section>
+				
+				
+				
+				
+				<section data-background="images/journey.gif">
+					<h2><span class="shadow">Drupal and LDAP</span></h2>
+					<h3><span class="shadow">Let the Journey Begin!</span></h3>
+				</section>
+				
+				<section>
+					<section>
+						<h2>Getting Geared Up</h2>
+					<img src="images/inventory.jpg">
+					</section>
+					<section>
+						<h2>Prerequisites</h2>
+						
+						<li>LDAP Server (OpenLDAP or ActiveDirectory)</li>
+						<li>PHP ldap extension enabled</li>
+						<li>mcrypt extension loaded and enabled (for encryption of stored passwords)</li>
+						<li>Open SSL or other ssl extension loaded</li>
+						<li>If using LDAPS, make sure certificate is installed on server</li>
+						<li><a href='https://www.drupal.org/node/1023900'>Prerequisite List on Drupal.org</a></li>
+					</section>
+					
+					<section>
+						<h2>Install PHP ldap extension</h2>
+						<h2>(Ubuntu Example)</h2>
+						<code class="hljs" data-trim contenteditable>
+							<pre>
+$ sudo apt-get install php5-ldap
+
+Reboot apache server
+
+$ sudo apache2 restart
+							</pre>
+						</code>
+					</section>
+
+<section>
+						<h2>Install PHP mcrypt extension</h2>
+						<h2>(Ubuntu Example)</h2>
+						<code class="hljs" data-trim contenteditable>
+							<pre>
+$ sudo apt-get install php5-mcrypt
+
+Reboot apache server
+
+$ sudo apache2 restart
+							</pre>
+						</code>
+					</section>
+
+					<section>
+						<h2>Install OpenSSL</h2>
+						<h2>(Ubuntu Example)</h2>
+						<code class="hljs" data-trim contenteditable>
+							<pre>
+$ sudo apt-get install openssl
+							</pre>
+						</code>
+					</section>
+				
+					<section>
+						<h2>Using LDAPS? (Strongly Suggested)</h2>
+						<p>Make sure certificate installed on server</p>
+					</section>
+
+					<section>
+						<img style='width: 60%;' src="images/quest-thing.gif">
+					</section>
+				</section>
+
+				<section data-background="images/going-on-adventure.gif">
+				</section>
+
+				<section>
+					<h2>Drupal and LDAP Module</h2>
+					<h3>Installation</h3>
+					<p><a href="https://www.drupal.org/project/ldap">Download LDAP Module from Drupal.org</a></p>
+					<p>Copy to sites/all/modules and extract</p>
+					<p>- or -</p>
+					<p><span class="highlighttext">Use Drush!</span> <img style='width: 50px' class='noborder' src='images/easy-button.png'></p>
+					<code class="hljs" data-trim contenteditable>
+							<pre>
+$ drush en ldap -y
+							</pre>
+						</code>
+				</section>
+				
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
