@@ -16,9 +16,10 @@
 
 		<link rel="stylesheet" href="css/reveal.css">
 		<link rel="stylesheet" href="css/theme/moon.css" id="theme">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
 		<!-- Code syntax highlighting -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<link rel="stylesheet" href="lib/css/solarized_dark.css">
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -155,8 +156,8 @@ $ sudo apache2 restart
 							</pre>
 						</code>
 					</section>
-
-<section>
+					
+					<section>
 						<h2>Install PHP mcrypt extension</h2>
 						<h2>(Ubuntu Example)</h2>
 						<code class="hljs" data-trim contenteditable>
@@ -182,15 +183,156 @@ $ sudo apt-get install openssl
 				
 					<section>
 						<h2>Using LDAPS? (Strongly Suggested)</h2>
-						<p>Make sure certificate installed on server</p>
+						<p>Install certificates</p>
+						<p>For CSTCC, Active Directory adminstrator provided cert, I installed on server and configured in ldap.conf</p>
 					</section>
 
-
 				</section>
+				
+				<section>
+					<section>
+						<h2>Using LDAP with PHP</h2>
+						<h3>Examples used in this presentation use:</h3>
+						<li>Composer</li>
+						<li>Adldap2 Package</li>
+					</section>
+					
+					<section>
+						<h2>Setup</h2>
+						<li>Install Composer</li>
+						<li>Create composer.json and install Adldap2 package</li>
+							<pre><code class="hljs">{
+    "name": "root/adldap2testing",
+    "require": {
+        "adldap2/adldap2": "5.2.*"
+    },
+    "authors": [
+        {
+            "name": "Bill Crum",
+            "email": "bill.crum@chattanoogastate.edu"
+        }
+    ]
+}
 
-				<section data-background="images/going-on-adventure.gif">
+# php composer.phar update adldap2/adldap2
+							</code></pre>
+
+					</section>
+					
+					<section>
+						<h2>Adldap2 Package Configuration</h2>
+						<li>This is where a good relationship with your Active Directory administrator will come in handy.</li>
+						<pre>
+							<code class="php">
+$config = [
+    'account_suffix'        => '@test.lan',
+    'domain_controllers'    => ['dcdmz.test.lan', 'dc1.test.lan'],
+    'port'                  => 389,
+    'base_dn'               => 'ou=User,dc=test,dc=lan',
+    'admin_username'        => 'admin_username',
+    'admin_password'        => 'admin_password',
+];
+							</code>
+						</pre>
+					</section>
+					
+					<section>
+					<h2>Query Example</h2>
+					<pre>
+					<code class="php" data-trim contenteditable>
+require 'vendor/autoload.php';
+require "includes/ldap_config.php";
+
+$ad = new \Adldap\Adldap($config);
+
+$username = "wcrum";
+$contact = $ad->users()->search()->find($username);
+
+$name = $contact['attributes']['cn'][0];
+$imageencoded = $contact['attributes']['thumbnailphoto'][0];
+$image = "<img src='data:image/jpeg;base64,".base64_encode($imageencoded)."'/>";
+$title = $contact['attributes']['title'][0];
+$phone = $contact['attributes']['telephonenumber'][0];
+
+echo "<pre>";
+echo "<h2>".$name."</h2>";
+echo "<p>".$image."</p>";
+echo "<p><strong>Title: </strong>".$title."</p>";
+echo "<p><strong>Extension: </strong>".$phone."</p>";
+echo "<h2>Raw Output</h2>";
+echo "<hr />";
+print_r($contact);
+echo "</pre>";
+						
+					</code>
+					</pre>
+					</section>
+					
+					<section>
+						<h2>Query Example</h2>
+						<iframe src="../adldap2testing/usertest.php" width=800 height=500></iframe>
+					</section>
+					
+					<section>
+					<h2>Authentication Example</h2>
+					<pre>
+					<code class="php" data-trim contenteditable>
+require 'vendor/autoload.php';
+require "includes/ldap_config.php";
+
+$ad = new \Adldap\Adldap($config);
+$username = "omitted to protect the innocent";
+$password = "omitted to protect the innocent";
+
+$user = $ad->search()->find($username);
+$user = $user['attributes']['cn'][0];
+
+  if ($username != '' && $ad->authenticate($username,$password, $bindAsUser = false)) {
+    echo "<div class='success'><h3>Authentication successful!</h3></div><h4>Hello, ".$user."</h4>";
+
+  } else {
+      // Authentication Failed!
+      echo "<div class='failed'>Authentication Failed</div>";
+    }
+						
+					</code>
+					</pre>
+					</section>
+					
+					<section>
+						<h2>Authentication Example</h2>
+						<iframe src="../adldap2testing/authtest.php" width=800 height=500></iframe>
+					</section>
+					
+					<section>
+						<h2>These are simple examples</h2>
+						<img src="https://media.giphy.com/media/5wWf7H89PisM6An8UAU/giphy.gif">
+					</section>
+					
 				</section>
-
+				
+				<section>
+					<h2>Real World Applications</h2>
+					<h3>(at Chattanooga State)</h3>
+					<li>PHP Password Change Application</li>
+					<li>Active Directory Authentication for Drupal sites</li>
+					<li>Student Portal</li>
+					<li>Office 365</li>
+					<li>Many others</li>
+				</section>
+				
+				<section>
+					<h2>A Short Discussion About Groups</h2>
+					<li>Active Directory Groups can be used to control access based on membership</li>
+				</section>
+				
+				<section>
+					<h2>Questions, comments, discussion</h2>
+					<p><i class="fa fa-envelope-o fa-2x"></i><span class="texthighlight"> E-mail: wacrum@gmail.com</span></p>
+					
+					<p><i class="fa fa-github fa-2x"></i> <span class="texthighlight">Presentation on GitHub </span><a href='https://goo.gl/XvlEkM'>https://goo.gl/XvlEkM</a></p>
+					
+				</section>
 
 				
 
