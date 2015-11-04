@@ -63,6 +63,11 @@
 						<h2><span class="shadow">LDAP Defined</span></h2>
 						<img src="images/cat-guard.gif">
 					</section>
+
+					<section>
+						<h2> <span class="shadow">LDAP Defined</span></h2>
+						<img style="width: 500px;" src="https://media.giphy.com/media/Bsqfe2L7DpQzK/giphy.gif">
+					</section>
 					<section>
 						<h2><span class="shadow">LDAP Defined</span></h2>
 						<p>
@@ -70,8 +75,10 @@
 						A common usage of LDAP is to provide a single sign on where one
 							password
 							  for a user
-							  is shared between many services, such as applying a company login code to web pages (so that staff log in only once to company computers, and then are automatically logged into the company intranet).
+							  is shared between many services...
 						</p>
+						<aside class="notes">At Chattanooga State, we use single sign on across many
+							applications.</aside>
 						<p class='texthighlight'>Source: <a href='https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol'>Wikipedia</a></p>
 					</section>
 				
@@ -94,6 +101,8 @@
 						<li>Easy Administration of Users, Roles, etc. </li>
 						<p>(We'll talk about Roles later on)</p>
 						<li>Active Directory is Maintained by Someone Else!!! <img class="noborder" src="images/devil-icon.png"></li>
+						<aside class="notes">Active Directory is also quite complex in it's own right...I
+							personally would rather someone else mess with it's intricacies.</aside>
 					</section>
 				</section>
 				
@@ -270,7 +279,8 @@ echo "</pre>";
 					
 					<section>
 						<h2>Query Example</h2>
-						<iframe src="../adldap2testing/usertest.php" width=800 height=500></iframe>
+						<iframe src="http://byob.chattanoogastate.edu/adldap2testing/usertest.php" width=800
+								height=500></iframe>
 					</section>
 					
 					<section>
@@ -301,7 +311,8 @@ $user = $user['attributes']['cn'][0];
 					
 					<section>
 						<h2>Authentication Example</h2>
-						<iframe src="../adldap2testing/authtest.php" width=800 height=500></iframe>
+						<iframe src="http://byob.chattanoogastate.edu/adldap2testing/authtest.php" width=800
+								height=500></iframe>
 					</section>
 					
 					<section>
@@ -318,12 +329,16 @@ $user = $user['attributes']['cn'][0];
 					<li>Active Directory Authentication for Drupal sites</li>
 					<li>Student Portal</li>
 					<li>Office 365</li>
+					<li>User status: <a href="http://itsdev.cstcc.lan/ad-change-tools">http://itsdev.cstcc.lan/ad-change-tools</a></li>
+					<li>Account Creation</li>
 					<li>Many others</li>
 				</section>
 				
 				<section>
 					<h2>A Short Discussion About Groups</h2>
-					<li>Active Directory Groups can be used to control access based on membership</li>
+					<li>Active Directory Groups can be used to control access based on group membership</li>
+					<li>Example: on the Chatt State IT Services website, only members of IT Services group have
+						access to project <listing></listing></li>
 				</section>
 				
 				<section>
@@ -362,7 +377,9 @@ $user = $user['attributes']['cn'][0];
 					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
 					{ src: 'plugin/zoom-js/zoom.js', async: true },
-					{ src: 'plugin/notes/notes.js', async: true }
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'socket.io/socket.io.js', async: true },
+					{ src: 'plugin/notes-server/client.js', async: true }
 				]
 			});
 
