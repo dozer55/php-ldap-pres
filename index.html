@@ -61,11 +61,13 @@
 
 					<section>
 						<h2><span class="shadow">LDAP Defined</span></h2>
+						<aside class="notes">Keep unauthorized users out, and let authorized users in.</aside>
 						<img src="images/cat-guard.gif">
 					</section>
 
 					<section>
 						<h2> <span class="shadow">LDAP Defined</span></h2>
+						<aside class="notes">Or at the very least slow them down.</aside>
 						<img style="width: 500px;" src="https://media.giphy.com/media/Bsqfe2L7DpQzK/giphy.gif">
 					</section>
 					<section>
@@ -142,14 +144,15 @@ if(isset($_SESSION['username'])){
 						
 						<li>LDAP Server (OpenLDAP or ActiveDirectory)</li>
 						<li>PHP ldap extension enabled</li>
-						<li>Open SSL or other ssl extension loaded</li>
+						<li>Install Open SSL</li>
 						<li>If using LDAPS, make sure certificate is installed on server</li>
 						<li>and...</li>
 					</section>
 
 					<section>
-						<img class="noborder" src="images/ploppers.gif">
+						<img style='width: 700px;' class="noborder" src="images/ploppers.gif">
 						<h3><span class="shadow">...a good relationship with your IT Department</span></h3>
+						<aside class="notes">I will cover how I was able to get this up and running on our systems.</aside>
 					</section>
 					
 					<section>
@@ -166,19 +169,7 @@ $ sudo apache2 restart
 						</code>
 					</section>
 					
-					<section>
-						<h2>Install PHP mcrypt extension</h2>
-						<h2>(Ubuntu Example)</h2>
-						<code class="hljs" data-trim contenteditable>
-							<pre>
-$ sudo apt-get install php5-mcrypt
 
-Reboot apache server
-
-$ sudo apache2 restart
-							</pre>
-						</code>
-					</section>
 
 					<section>
 						<h2>Install OpenSSL</h2>
@@ -203,7 +194,7 @@ $ sudo apt-get install openssl
 						<h2>Using LDAP with PHP</h2>
 						<h3>Examples used in this presentation use:</h3>
 						<li>Composer</li>
-						<li>Adldap2 Package</li>
+						<li>Adldap2 Package <span class="texthighlight">(Packagist)</span></li>
 					</section>
 					
 					<section>
@@ -232,14 +223,15 @@ $ sudo apt-get install openssl
 						<h2>Adldap2 Package Configuration</h2>
 						<li>This is where a good relationship with your Active Directory administrator will come in handy.</li>
 						<pre>
-							<code class="php">
+							<code class="php" data-trim contenteditable>
+// includes/ldap_config.php
+
 $config = [
-    'account_suffix'        => '@test.lan',
-    'domain_controllers'    => ['dcdmz.test.lan', 'dc1.test.lan'],
-    'port'                  => 389,
-    'base_dn'               => 'ou=User,dc=test,dc=lan',
-    'admin_username'        => 'admin_username',
-    'admin_password'        => 'admin_password',
+    'account_suffix'     => '@test.lan',
+    'domain_controllers' => ['dcdmz.test.lan', 'dc1.test.lan'],
+    'base_dn'            => 'ou=User,dc=test,dc=lan',
+    'admin_username'     => 'admin_username',
+    'admin_password'     => 'admin_password',
 ];
 							</code>
 						</pre>
